@@ -129,6 +129,44 @@ const invoices = [
   },
 ];
 
+const latestInvoices = [
+  {
+    "id": "inv001",
+    "name": "John Doe",
+    "image_url": "https://placehold.co/250/93C5fd/fff/png?text=JD",
+    "email": "john.doe@example.com",
+    "amount": "150.00"
+  },
+  {
+    "id": "inv002",
+    "name": "Jane Smith",
+    "image_url": "https://placehold.co/250/93C5fd/fff/png?text=JS",
+    "email": "jane.smith@example.com",
+    "amount": "200.50"
+  },
+  {
+    "id": "inv003",
+    "name": "Alice Johnson",
+    "image_url": "https://placehold.co/250/93C5fd/fff/png?text=AJ",
+    "email": "alice.johnson@example.com",
+    "amount": "320.75"
+  },
+  {
+    "id": "inv004",
+    "name": "Bob Brown",
+    "image_url": "https://placehold.co/250/93C5fd/fff/png?text=BB",
+    "email": "bob.brown@example.com",
+    "amount": "450.00"
+  },
+  {
+    "id": "inv005",
+    "name": "Charlie Wilson",
+    "image_url": "https://placehold.co/250/93C5fd/fff/png?text=CW",
+    "email": "charlie.wilson@example.com",
+    "amount": "175.25"
+  }
+]
+
 const revenue = [
   { month: 'Jan', revenue: 2000 },
   { month: 'Feb', revenue: 1800 },
@@ -144,4 +182,4 @@ const revenue = [
   { month: 'Dec', revenue: 4800 },
 ];
 
-export { users, customers, invoices, revenue };
+export { users, customers, invoices, revenue, latestInvoices };
