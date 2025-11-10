@@ -1,15 +1,71 @@
-import { lusitana } from '@/app/(ui)/fonts';
+import React from "react";
+import { lusitana } from "@/app/(ui)/fonts";
 import {
   AtSymbolIcon,
   KeyIcon,
   ExclamationCircleIcon,
-} from '@heroicons/react/24/outline';
-import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import { Button } from './button';
+} from "@heroicons/react/24/outline";
+import { ArrowRightIcon } from "@heroicons/react/20/solid";
+import { Button } from "./button";
+
+import { loginUser } from "@/lib/auth";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
+import { getCookie, setCookie } from "cookies-next";
 
 export default function LoginForm() {
+  const [loading, setLoading] = React.useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    Swal.fire({
+      width: 300,
+      padding: 24,
+      text: "Processing...",
+      background: "rgba(0,0,0,0.7)",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    await loginUser({
+      email,
+      password,
+    }).then(async (res) => {
+      setLoading(false);
+      if (res?.error) {
+        Swal.fire({
+          icon: "error",
+          title: res?.error?.error ?? "Login error",
+          text: res?.error?.message ?? "Invalid email or Password",
+        });
+      } else {
+        Swal.close();
+        console.log({res})
+        const token = res.data?.token ?? ""
+        await setCookie("token", token, {
+          secure: true,
+        });
+
+        if (token) {
+          setLoading(false);
+          router.refresh();
+          setTimeout(() => {
+            router.push("/dashboard");
+          }, 500);
+        }
+      }
+    });
+  };
+
   return (
-    <form className="space-y-3">
+    <form onSubmit={handleLogin} className="space-y-3">
       <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
         <h1 className={`${lusitana.className} mb-3 text-2xl`}>
           Please log in to continue.
@@ -29,6 +85,8 @@ export default function LoginForm() {
                 type="email"
                 name="email"
                 placeholder="Enter your email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
               <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
@@ -47,8 +105,10 @@ export default function LoginForm() {
                 id="password"
                 type="password"
                 name="password"
-                placeholder="Enter password"
+                placeholder="Enter your password"
                 required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 minLength={6}
               />
               <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
