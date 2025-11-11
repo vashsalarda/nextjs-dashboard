@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { lusitana } from "@/app/(ui)/fonts";
 import {
   AtSymbolIcon,
@@ -9,7 +11,6 @@ import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import { Button } from "./button";
 
 import { loginUser } from "@/lib/auth";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { getCookie, setCookie } from "cookies-next";
@@ -20,6 +21,15 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+
+  // Redirect if a token cookie already exists
+  useEffect(() => {
+    const raw = getCookie("isLoggedIn");
+    const isLoggedIn = raw === "true" || raw === "1";
+    if (isLoggedIn) {
+      router.replace("/dashboard");
+    }
+  }, [router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,18 +57,16 @@ export default function LoginForm() {
         });
       } else {
         Swal.close();
-        console.log({res})
-        const token = res.data?.token ?? ""
-        await setCookie("token", token, {
-          secure: true,
-        });
-
+        const token = res.data?.token ?? "";
         if (token) {
+          await setCookie("isLoggedIn", true, {
+            secure: true,
+          });
           setLoading(false);
           router.refresh();
           setTimeout(() => {
             router.push("/dashboard");
-          }, 500);
+          }, 300);
         }
       }
     });
