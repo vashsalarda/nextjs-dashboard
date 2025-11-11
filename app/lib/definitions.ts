@@ -13,12 +13,12 @@ export type Customer = {
   id: string;
   name: string;
   email: string;
-  image_url: string;
+  imageUrl: string;
 };
 
 export type Invoice = {
   id: string;
-  customer_id: string;
+  customerId: string;
   amount: number;
   date: string;
   // In TypeScript, this is called a string union type.
@@ -34,7 +34,7 @@ export type Revenue = {
 export type LatestInvoice = {
   id: string;
   name: string;
-  image_url: string;
+  imageUrl: string;
   email: string;
   amount: string;
 };
@@ -46,10 +46,10 @@ export type LatestInvoiceRaw = Omit<LatestInvoice, 'amount'> & {
 
 export type InvoicesTable = {
   id: string;
-  customer_id: string;
+  customerId: string;
   name: string;
   email: string;
-  image_url: string;
+  imageUrl: string;
   date: string;
   amount: number;
   status: 'pending' | 'paid';
@@ -59,20 +59,20 @@ export type CustomersTableType = {
   id: string;
   name: string;
   email: string;
-  image_url: string;
-  total_invoices: number;
-  total_pending: number;
-  total_paid: number;
+  imageUrl: string;
+  totalInvoices: number;
+  totalPending: number;
+  totalPaid: number;
 };
 
 export type FormattedCustomersTable = {
   id: string;
   name: string;
   email: string;
-  image_url: string;
-  total_invoices: number;
-  total_pending: string;
-  total_paid: string;
+  imageUrl: string;
+  totalInvoices: number;
+  totalPending: string;
+  totalPaid: string;
 };
 
 export type CustomerField = {
@@ -82,7 +82,7 @@ export type CustomerField = {
 
 export type InvoiceForm = {
   id: string;
-  customer_id: string;
+  customerId: string;
   amount: number;
   status: 'pending' | 'paid';
 };

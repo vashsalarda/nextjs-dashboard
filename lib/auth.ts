@@ -1,4 +1,4 @@
-import { Convert } from "@/app/types/login_res";
+import { Convert } from "@/app/types/login";
 import axios from "axios";
 import api from '@/lib/axios';
 
