@@ -66,7 +66,7 @@ export default function LoginForm() {
           router.refresh();
           setTimeout(() => {
             router.push("/dashboard");
-          }, 300);
+          }, 100);
         }
       }
     });

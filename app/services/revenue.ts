@@ -4,10 +4,14 @@ import { Revenue } from "@/app/types";
 export const revenueService = {
   getRevenues: async (): Promise<Revenue[]> => {
     try {
-      const response = await api.get<Revenue[]>('/revenues');
+      console.log("Fetching revenue data...");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      const response = await api.get<Revenue[]>("/revenues");
+      console.log("Data fetch completed.");
       return response.data;
     } catch (error) {
-      console.error('Failed to fetch revenues:', error);
+      console.error("Failed to fetch revenues:", error);
       throw error;
     }
   },
@@ -22,17 +26,20 @@ export const revenueService = {
     }
   },
 
-  createRevenue: async (revenue: Omit<Revenue, 'id'>): Promise<Revenue> => {
+  createRevenue: async (revenue: Omit<Revenue, "id">): Promise<Revenue> => {
     try {
-      const response = await api.post<Revenue>('/revenues', revenue);
+      const response = await api.post<Revenue>("/revenues", revenue);
       return response.data;
     } catch (error) {
-      console.error('Failed to create revenue:', error);
+      console.error("Failed to create revenue:", error);
       throw error;
     }
   },
 
-  updateRevenue: async (id: string, revenue: Partial<Revenue>): Promise<Revenue> => {
+  updateRevenue: async (
+    id: string,
+    revenue: Partial<Revenue>
+  ): Promise<Revenue> => {
     try {
       const response = await api.put<Revenue>(`/revenues/${id}`, revenue);
       return response.data;

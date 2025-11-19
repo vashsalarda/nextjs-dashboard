@@ -5,10 +5,14 @@ import { LatestInvoice } from "../lib/definitions";
 export const invoiceService = {
   getInvoices: async (): Promise<Invoice[]> => {
     try {
-      const response = await api.get<Invoice[]>('/invoices');
+      console.log("Fetching revenue data...");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      const response = await api.get<Invoice[]>("/invoices");
+      console.log("Data fetch completed.");
       return response.data;
     } catch (error) {
-      console.error('Failed to fetch invoices:', error);
+      console.error("Failed to fetch invoices:", error);
       throw error;
     }
   },
@@ -23,17 +27,20 @@ export const invoiceService = {
     }
   },
 
-  createInvoice: async (invoice: Omit<Invoice, 'id'>): Promise<Invoice> => {
+  createInvoice: async (invoice: Omit<Invoice, "id">): Promise<Invoice> => {
     try {
-      const response = await api.post<Invoice>('/invoices', invoice);
+      const response = await api.post<Invoice>("/invoices", invoice);
       return response.data;
     } catch (error) {
-      console.error('Failed to create invoice:', error);
+      console.error("Failed to create invoice:", error);
       throw error;
     }
   },
 
-  updateInvoice: async (id: string, invoice: Partial<Invoice>): Promise<Invoice> => {
+  updateInvoice: async (
+    id: string,
+    invoice: Partial<Invoice>
+  ): Promise<Invoice> => {
     try {
       const response = await api.put<Invoice>(`/invoices/${id}`, invoice);
       return response.data;
@@ -54,10 +61,13 @@ export const invoiceService = {
 
   getLatestInvoices: async (): Promise<LatestInvoice[]> => {
     try {
-      const response = await api.get<LatestInvoice[]>('/invoices/latest');
+      console.log("Fetching latest latest...");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await api.get<LatestInvoice[]>("/invoices/latest");
+      console.log("Data fetch completed.");
       return response.data;
     } catch (error) {
-      console.error('Failed to fetch latest invoices:', error);
+      console.error("Failed to fetch latest latest:", error);
       throw error;
     }
   },
