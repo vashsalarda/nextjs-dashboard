@@ -11,6 +11,15 @@ export interface Invoice {
   amount: number;
   date: string;
   status: 'pending' | 'paid';
+  customer: Customer;
+};
+
+export interface InvoicePage {
+  page_size: string;
+  page_number: string;
+  total_rows: number;
+  total_pages: string;
+  data: Invoice[];
 };
 
 export interface Revenue {

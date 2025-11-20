@@ -14,8 +14,20 @@ import { revenueService } from "@/app/services/revenue";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
-export async function fetchInvoices() {
-  return await invoiceService.getInvoices();
+export async function fetchInvoices(query: string, currentPage: number) {
+  return await invoiceService.getInvoices(query, currentPage);
+}
+
+export async function fetchTotalInvoices() {
+  return await invoiceService.getTotalInvoices();
+}
+
+export async function fetchTotalPaidInvoices() {
+  return await invoiceService.getTotalPaidInvoices();
+}
+
+export async function fetchTotalPendingInvoices() {
+  return await invoiceService.getTotalPendingInvoices();
 }
 
 export async function fetchRevenue() {
@@ -26,8 +38,12 @@ export async function fetchLatestInvoices() {
   return await invoiceService.getLatestInvoices();
 }
 
-export async function fetchCutomers() {
+export async function fetchCustomers() {
   return await customerService.getCustomers();
+}
+
+export async function fetchTotalCustomers() {
+  return await customerService.getTotalCustomers();
 }
 
 export async function fetchCardData() {
@@ -147,22 +163,22 @@ export async function fetchInvoiceById(id: string) {
   }
 }
 
-export async function fetchCustomers() {
-  try {
-    const customers = await sql<CustomerField[]>`
-      SELECT
-        id,
-        name
-      FROM customers
-      ORDER BY name ASC
-    `;
+// export async function fetchCustomers() {
+//   try {
+//     const customers = await sql<CustomerField[]>`
+//       SELECT
+//         id,
+//         name
+//       FROM customers
+//       ORDER BY name ASC
+//     `;
 
-    return customers;
-  } catch (err) {
-    console.error('Database Error:', err);
-    throw new Error('Failed to fetch all customers.');
-  }
-}
+//     return customers;
+//   } catch (err) {
+//     console.error('Database Error:', err);
+//     throw new Error('Failed to fetch all customers.');
+//   }
+// }
 
 export async function fetchFilteredCustomers(query: string) {
   try {

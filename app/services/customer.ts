@@ -12,6 +12,16 @@ export const customerService = {
     }
   },
 
+  getTotalCustomers: async (): Promise<number> => {
+    try {
+      const response = await api.get<number>('/customers-total');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch total customers:', error);
+      throw error;
+    }
+  },
+
   getCustomerById: async (id: number): Promise<Customer> => {
     try {
       const response = await api.get<Customer>(`/customers/${id}`);

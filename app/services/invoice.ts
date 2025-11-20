@@ -1,14 +1,20 @@
 import api from "@/lib/axios";
-import { Invoice } from "@/app/types";
+import { Invoice, InvoicePage } from "@/app/types";
 import { LatestInvoice } from "../lib/definitions";
 
 export const invoiceService = {
-  getInvoices: async (): Promise<Invoice[]> => {
+  
+  getInvoices: async (
+    query: string,
+    currentPage: number,
+  ): Promise<InvoicePage> => {
+    const ITEMS_PER_PAGE = 6;
+    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
     try {
-      console.log("Fetching revenue data...");
+      console.log("Fetching invoice data...");
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const response = await api.get<Invoice[]>("/invoices");
+      const response = await api.get<InvoicePage>("/invoices");
       console.log("Data fetch completed.");
       return response.data;
     } catch (error) {
@@ -68,6 +74,48 @@ export const invoiceService = {
       return response.data;
     } catch (error) {
       console.error("Failed to fetch latest latest:", error);
+      throw error;
+    }
+  },
+
+  getTotalInvoices: async (): Promise<number> => {
+    try {
+      console.log("Fetching total invoices...");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      const response = await api.get<number>("/invoices-total");
+      console.log("Data fetch completed.");
+      return response.data;
+    } catch (error) {
+      console.error("Failed to fetch total invoices:", error);
+      throw error;
+    }
+  },
+
+  getTotalPaidInvoices: async (): Promise<number> => {
+    try {
+      console.log("Fetching total invoices...");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      const response = await api.get<number>("/invoices-total?status=paid");
+      console.log("Data fetch completed.");
+      return response.data;
+    } catch (error) {
+      console.error("Failed to fetch total paid invoices:", error);
+      throw error;
+    }
+  },
+
+  getTotalPendingInvoices: async (): Promise<number> => {
+    try {
+      console.log("Fetching total invoices...");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      const response = await api.get<number>("/invoices-total?status=pending");
+      console.log("Data fetch completed.");
+      return response.data;
+    } catch (error) {
+      console.error("Failed to fetch total pending invoices:", error);
       throw error;
     }
   },
