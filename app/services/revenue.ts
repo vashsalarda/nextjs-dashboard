@@ -5,10 +5,7 @@ export const revenueService = {
   getRevenues: async (): Promise<Revenue[]> => {
     try {
       console.log("Fetching revenue data...");
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       const response = await api.get<Revenue[]>("/revenues");
-      console.log("Data fetch completed.");
       return response.data;
     } catch (error) {
       console.error("Failed to fetch revenues:", error);

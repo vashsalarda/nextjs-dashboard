@@ -6,12 +6,14 @@ import { fetchInvoices } from '@/app/lib/data';
 
 export default async function InvoicesTable({
   query,
-  currentPage,
+  page,
+  pageSize
 }: {
   query: string;
-  currentPage: number;
+  page: number;
+  pageSize: number
 }) {
-  const invoicesRes = await fetchInvoices(query, currentPage);
+  const invoicesRes = await fetchInvoices(query, page, pageSize);
   let invoices = invoicesRes && invoicesRes.data ? invoicesRes.data : []
 
   return (
@@ -34,9 +36,9 @@ export default async function InvoicesTable({
                         height={28}
                         alt={`${invoice.customer.name}'s profile picture`}
                       />
-                      <p>{invoice.customer_id}</p>
+                      <p>{invoice.customerId}</p>
                     </div>
-                    <p className="text-sm text-gray-500">{invoice.customer_id}</p>
+                    <p className="text-sm text-gray-500">{invoice.customerId}</p>
                   </div>
                   <InvoiceStatus status={invoice.status} />
                 </div>
@@ -93,7 +95,7 @@ export default async function InvoicesTable({
                         height={28}
                         alt={`${invoice.customer.name}'s profile picture`}
                       />
-                      <p>{invoice.customer_id}</p>
+                      <p>{invoice.customer.name}</p>
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">

@@ -14,12 +14,12 @@ import { revenueService } from "@/app/services/revenue";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
-export async function fetchInvoices(query: string, currentPage: number) {
-  return await invoiceService.getInvoices(query, currentPage);
+export async function fetchInvoices(query: string, page: number, pageSize: number) {
+  return await invoiceService.getInvoices(query, page, pageSize);
 }
 
-export async function fetchTotalInvoices() {
-  return await invoiceService.getTotalInvoices();
+export async function fetchTotalInvoices(query: string) {
+  return await invoiceService.getTotalInvoices(query);
 }
 
 export async function fetchTotalPaidInvoices() {

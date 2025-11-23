@@ -7,7 +7,7 @@ export interface Customer {
 
 export interface Invoice {
   id: string;
-  customer_id: string;
+  customerId: string;
   amount: number;
   date: string;
   status: 'pending' | 'paid';

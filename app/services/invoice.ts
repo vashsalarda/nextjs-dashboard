@@ -6,16 +6,18 @@ export const invoiceService = {
   
   getInvoices: async (
     query: string,
-    currentPage: number,
+    pageNumber: number,
+    pageSize: number,
   ): Promise<InvoicePage> => {
-    const ITEMS_PER_PAGE = 6;
-    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+    const params = new URLSearchParams();
+    if (query) params.append("keyword", query);
+    if (pageNumber) params.append("page", pageNumber.toString());
+    if (pageSize) params.append("size", pageSize.toString());
+    
     try {
+      const url = `/invoices${params.toString() ? `?${params.toString()}` : ""}`;
       console.log("Fetching invoice data...");
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      const response = await api.get<InvoicePage>("/invoices");
-      console.log("Data fetch completed.");
+      const response = await api.get<InvoicePage>(url);
       return response.data;
     } catch (error) {
       console.error("Failed to fetch invoices:", error);
@@ -68,9 +70,7 @@ export const invoiceService = {
   getLatestInvoices: async (): Promise<LatestInvoice[]> => {
     try {
       console.log("Fetching latest latest...");
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       const response = await api.get<LatestInvoice[]>("/invoices/latest");
-      console.log("Data fetch completed.");
       return response.data;
     } catch (error) {
       console.error("Failed to fetch latest latest:", error);
@@ -78,13 +78,12 @@ export const invoiceService = {
     }
   },
 
-  getTotalInvoices: async (): Promise<number> => {
+  getTotalInvoices: async (
+    query: string,
+  ): Promise<number> => {
     try {
       console.log("Fetching total invoices...");
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      const response = await api.get<number>("/invoices-total");
-      console.log("Data fetch completed.");
+      const response = await api.get<number>(`invoices-total?keyword=${query.toString()}`);
       return response.data;
     } catch (error) {
       console.error("Failed to fetch total invoices:", error);
@@ -95,10 +94,7 @@ export const invoiceService = {
   getTotalPaidInvoices: async (): Promise<number> => {
     try {
       console.log("Fetching total invoices...");
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       const response = await api.get<number>("/invoices-total?status=paid");
-      console.log("Data fetch completed.");
       return response.data;
     } catch (error) {
       console.error("Failed to fetch total paid invoices:", error);
@@ -109,10 +105,7 @@ export const invoiceService = {
   getTotalPendingInvoices: async (): Promise<number> => {
     try {
       console.log("Fetching total invoices...");
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       const response = await api.get<number>("/invoices-total?status=pending");
-      console.log("Data fetch completed.");
       return response.data;
     } catch (error) {
       console.error("Failed to fetch total pending invoices:", error);
