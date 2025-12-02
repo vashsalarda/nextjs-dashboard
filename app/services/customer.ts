@@ -1,10 +1,10 @@
 import api from "@/lib/axios";
-import { Customer } from "@/app/types";
+import { Customer, CustomerPage } from "@/app/types";
 
 export const customerService = {
-  getCustomers: async (): Promise<Customer[]> => {
+  getCustomers: async (): Promise<CustomerPage> => {
     try {
-      const response = await api.get<Customer[]>('/customers');
+      const response = await api.get<CustomerPage>('/customers');
       return response.data;
     } catch (error) {
       console.error('Failed to fetch customers:', error);

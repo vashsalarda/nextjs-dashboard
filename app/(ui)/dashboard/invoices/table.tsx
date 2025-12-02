@@ -1,20 +1,25 @@
-import Image from 'next/image';
-import { UpdateInvoice, DeleteInvoice } from '@/app/(ui)/dashboard/invoices/buttons';
-import InvoiceStatus from '@/app/(ui)/dashboard/invoices/status';
-import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
-import { fetchInvoices } from '@/app/lib/data';
+import Image from "next/image";
+import {
+  UpdateInvoice,
+  DeleteInvoice,
+} from "@/app/(ui)/dashboard/invoices/buttons";
+import InvoiceStatus from "@/app/(ui)/dashboard/invoices/status";
+import { formatDateToLocal, formatCurrency } from "@/app/lib/utils";
+import { fetchInvoices } from "@/app/lib/data";
+import Link from "next/link";
+import { Button } from "../../button";
 
 export default async function InvoicesTable({
   query,
   page,
-  pageSize
+  pageSize,
 }: {
   query: string;
   page: number;
-  pageSize: number
+  pageSize: number;
 }) {
   const invoicesRes = await fetchInvoices(query, page, pageSize);
-  let invoices = invoicesRes && invoicesRes.data ? invoicesRes.data : []
+  let invoices = invoicesRes && invoicesRes.data ? invoicesRes.data : [];
 
   return (
     <div className="mt-6 flow-root">
@@ -38,7 +43,9 @@ export default async function InvoicesTable({
                       />
                       <p>{invoice.customerId}</p>
                     </div>
-                    <p className="text-sm text-gray-500">{invoice.customerId}</p>
+                    <p className="text-sm text-gray-500">
+                      {invoice.customerId}
+                    </p>
                   </div>
                   <InvoiceStatus status={invoice.status} />
                 </div>
@@ -56,6 +63,14 @@ export default async function InvoicesTable({
                 </div>
               </div>
             ))}
+          </div>
+          <div className="mt-6 flex justify-end gap-4">
+            <Link
+              href="/dashboard/invoices/create"
+              className="flex h-10 items-center rounded-lg bg-blue-600 mg-up-4 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-400"
+            >
+              Add
+            </Link>
           </div>
           <table className="hidden min-w-full text-gray-900 md:table">
             <thead className="rounded-lg text-left text-sm font-normal">

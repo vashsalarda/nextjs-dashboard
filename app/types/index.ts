@@ -5,6 +5,14 @@ export interface Customer {
   imageUrl: string;
 };
 
+export interface CustomerPage {
+  page_size: string;
+  page_number: string;
+  total_rows: number;
+  total_pages: string;
+  data: Customer[];
+};
+
 export interface Invoice {
   id: string;
   customerId: string;

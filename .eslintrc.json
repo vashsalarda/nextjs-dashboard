@@ -1,0 +1,9 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  "rules": {
+    "quotes": ["error", "double", { "avoidEscape": true }],
+    "@typescript-eslint/quotes": ["error", "double", { "avoidEscape": true }]
+  }
+}
