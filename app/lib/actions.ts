@@ -4,6 +4,8 @@ import { z } from "zod";
 import { db } from "./mongodb";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { ObjectId } from "mongodb";
+import { Customer } from "./definitions";
 
 const FormSchema = z.object({
   id: z.string(),
@@ -14,9 +16,9 @@ const FormSchema = z.object({
 });
 
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
+const UpateInvoice = FormSchema.omit({ id: true, date: true });
 
 export async function createInvoice(formData: FormData) {
-  console.log({ formData });
   const { customerId, amount, status } = CreateInvoice.parse({
     customerId: formData.get("customerId") ?? "",
     amount: formData.get("amount") ?? 0,
@@ -33,13 +35,30 @@ export async function createInvoice(formData: FormData) {
   const database = await db();
   const customer = await database
     .collection("customers")
-    .findOne({"_id":customerIdObj});
+    .findOne({ _id: customerIdObj });
 
-  console.log({ customerId, customer, amount, status, date, createdAt: new Date() });
+  let customerData = {} as Customer
+  if (customer != null) {
+    customerData = {
+      id: customer.id,
+      name: customer.name,
+      email: customer.name,
+      imageUrl: customer.imageUrl
+    };
+  }
+
+  console.log({
+    customerId,
+    customerData,
+    amount,
+    status,
+    date,
+    createdAt: new Date(),
+  });
 
   const resp = await database.collection("invoices").insertOne({
-    customerIdObj,
-    customer,
+    customerId: customerIdObj,
+    customer: customerData,
     amount,
     status,
     date,
@@ -51,4 +70,50 @@ export async function createInvoice(formData: FormData) {
 
   revalidatePath("/dashboard/invoices");
   redirect("/dashboard/invoices");
+}
+
+
+export async function updateInvoice(id: string, formData: FormData) {
+  const { customerId, amount, status } = CreateInvoice.parse({
+    customerId: formData.get("customerId") ?? "",
+    amount: formData.get("amount") ?? 0,
+    status: formData.get("status") ?? "",
+  });
+
+  const { ObjectId } = await import("mongodb");
+  if (!ObjectId.isValid(customerId)) {
+    throw new Error("Invalid customerId");
+  }
+  const customerIdObj = new ObjectId(customerId);
+
+  const database = await db();
+  const customer = await database
+    .collection("customers")
+    .findOne({ _id: customerIdObj });
+
+  let customerData = {} as Customer
+  if (customer != null) {
+    customerData = {
+      id: customer.id,
+      name: customer.name,
+      email: customer.name,
+      imageUrl: customer.imageUrl
+    };
+  }
+
+  await database
+    .collection("invoices")
+    .updateOne({ _id: new ObjectId(id) }, { $set: { customerId: customerIdObj, customer: customerData, amount, status } });
+
+  revalidatePath("/dashboard/invoices");
+  redirect("/dashboard/invoices");
+}
+
+export async function deleteInvoice(id: string) {
+  const database = await db();
+  await database.collection("invoices").deleteOne({
+    _id: new ObjectId(id)
+  });
+
+  revalidatePath("/dashboard/invoices");
 }

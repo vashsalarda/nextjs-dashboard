@@ -25,7 +25,7 @@ export const invoiceService = {
     }
   },
 
-  getInvoiceById: async (id: number): Promise<Invoice> => {
+  getInvoiceById: async (id: string): Promise<Invoice> => {
     try {
       const response = await api.get<Invoice>(`/invoices/${id}`);
       return response.data;

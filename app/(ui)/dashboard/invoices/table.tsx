@@ -64,14 +64,6 @@ export default async function InvoicesTable({
               </div>
             ))}
           </div>
-          <div className="mt-6 flex justify-end gap-4">
-            <Link
-              href="/dashboard/invoices/create"
-              className="flex h-10 items-center rounded-lg bg-blue-600 mg-up-4 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-400"
-            >
-              Add
-            </Link>
-          </div>
           <table className="hidden min-w-full text-gray-900 md:table">
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
