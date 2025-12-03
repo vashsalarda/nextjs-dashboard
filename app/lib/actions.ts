@@ -68,13 +68,17 @@ export async function createInvoice(formData: FormData) {
 
   console.log({ resp });
 
+  if (!resp.insertedId) {
+    throw new Error("Failed to Create Invoice");
+  }
+
   revalidatePath("/dashboard/invoices");
   redirect("/dashboard/invoices");
 }
 
 
 export async function updateInvoice(id: string, formData: FormData) {
-  const { customerId, amount, status } = CreateInvoice.parse({
+  const { customerId, amount, status } = UpateInvoice.parse({
     customerId: formData.get("customerId") ?? "",
     amount: formData.get("amount") ?? 0,
     status: formData.get("status") ?? "",
@@ -101,9 +105,17 @@ export async function updateInvoice(id: string, formData: FormData) {
     };
   }
 
-  await database
+  const res = await database
     .collection("invoices")
     .updateOne({ _id: new ObjectId(id) }, { $set: { customerId: customerIdObj, customer: customerData, amount, status } });
+
+  if (res.matchedCount == 0) {
+    throw new Error("Could not found the Invoice");
+  }
+
+  if (res.modifiedCount == 0) {
+    throw new Error("Failed to update Invoice");
+  }
 
   revalidatePath("/dashboard/invoices");
   redirect("/dashboard/invoices");
@@ -111,9 +123,13 @@ export async function updateInvoice(id: string, formData: FormData) {
 
 export async function deleteInvoice(id: string) {
   const database = await db();
-  await database.collection("invoices").deleteOne({
+  const res = await database.collection("invoices").deleteOne({
     _id: new ObjectId(id)
   });
+
+  if (res.deletedCount == 0) {
+    throw new Error("Failed to delete Invoice");
+  }
 
   revalidatePath("/dashboard/invoices");
 }
