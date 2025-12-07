@@ -11,43 +11,107 @@ import { formatCurrency } from './utils';
 import { invoiceService } from "@/app/services/invoice";
 import { customerService } from "@/app/services/customer";
 import { revenueService } from "@/app/services/revenue";
+import { CustomerPage, Invoice, InvoicePage, LatestInvoice } from '../types';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
 export async function fetchInvoices(query: string, page: number, pageSize: number) {
-  return await invoiceService.getInvoices(query, page, pageSize);
+  let invoicePage = {} as InvoicePage;
+  try {
+    invoicePage = await invoiceService.getInvoices(query, page, pageSize);
+  } catch (error) {
+    console.error('Database Error:', error);
+    // throw new Error('Failed to fetch invoices.');
+  }
+  return invoicePage;
 }
 
 export async function fetchInvoiceById(id: string) {
-  return await invoiceService.getInvoiceById(id);
+  let invoice = {} as Invoice;
+  try {
+    invoice = await invoiceService.getInvoiceById(id);
+  } catch (error) {
+    console.error('Database Error:', error);
+    // throw new Error('Failed to fetch invoice.');
+  }
+  return invoice;
 }
 
 export async function fetchTotalInvoices(query: string) {
-  return await invoiceService.getTotalInvoices(query);
+  let total = 0;
+  try {
+    total = await invoiceService.getTotalInvoices(query);
+  } catch (error) {
+    console.error('Database Error:', error);
+    // throw new Error('Failed to fetch total invoice.');
+  }
+  return total;
 }
 
 export async function fetchTotalPaidInvoices() {
-  return await invoiceService.getTotalPaidInvoices();
+  let total = 0;
+  try {
+    total = await invoiceService.getTotalPaidInvoices();
+  } catch (error) {
+    console.error('Database Error:', error);
+    // throw new Error('Failed to fetch total paid invoice.');
+  }
+  return total;
 }
 
 export async function fetchTotalPendingInvoices() {
-  return await invoiceService.getTotalPendingInvoices();
+  let total = 0;
+  try {
+    total = await invoiceService.getTotalPendingInvoices();
+  } catch (error) {
+    console.error('Database Error:', error);
+    // throw new Error('Failed to fetch total pending invoice.');
+  }
+  return total;
 }
 
 export async function fetchRevenue() {
-  return await revenueService.getRevenues();
+  let revenues = [] as Revenue[];
+  try {
+    revenues = await revenueService.getRevenues();
+  } catch (error) {
+    console.error('Database Error:', error);
+    // throw new Error('Failed to fetch total revuenues invoice.');
+  }
+  return revenues;
 }
 
 export async function fetchLatestInvoices() {
-  return await invoiceService.getLatestInvoices();
+  let latestInvoices = [] as LatestInvoice[];
+  try {
+    latestInvoices = await invoiceService.getLatestInvoices();
+  } catch (error) {
+    console.error('Database Error:', error);
+    // throw new Error('Failed to fetch latest invoice.');
+  }
+  return latestInvoices;
 }
 
 export async function fetchCustomers() {
-  return await customerService.getCustomers();
+  let customerPage = {} as CustomerPage;
+  try {
+    customerPage = await customerService.getCustomers();
+  } catch (error) {
+    console.error('Database Error:', error);
+    // throw new Error('Failed to fetch customers');
+  }
+  return customerPage;
 }
 
 export async function fetchTotalCustomers() {
-  return await customerService.getTotalCustomers();
+  let total = 0
+  try {
+    total =  await customerService.getTotalCustomers();
+  } catch (error) {
+    console.error('Database Error:', error);
+    // throw new Error('Failed to fetch customers');
+  }
+  return total;
 }
 
 // export async function fetchCardData() {

@@ -8,6 +8,7 @@ import { formatDateToLocal, formatCurrency } from "@/app/lib/utils";
 import { fetchInvoices } from "@/app/lib/data";
 import Link from "next/link";
 import { Button } from "../../button";
+import { log } from "console";
 
 export default async function InvoicesTable({
   query,
@@ -20,6 +21,19 @@ export default async function InvoicesTable({
 }) {
   const invoicesRes = await fetchInvoices(query, page, pageSize);
   let invoices = invoicesRes && invoicesRes.data ? invoicesRes.data : [];
+  console.log({invoices});
+  
+  if (!invoices || invoices.length === 0) {
+    return (
+      <div className="mt-6 flow-root">
+        <div className="inline-block min-w-full align-middle">
+          <div className="rounded-lg bg-gray-50 p-6 text-center">
+            <p className="text-sm text-gray-500">No data found</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-6 flow-root">

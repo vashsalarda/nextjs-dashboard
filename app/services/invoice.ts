@@ -69,11 +69,11 @@ export const invoiceService = {
 
   getLatestInvoices: async (): Promise<LatestInvoice[]> => {
     try {
-      console.log("Fetching latest latest...");
+      console.log("Fetching latest invoices...");
       const response = await api.get<LatestInvoice[]>("/invoices/latest");
       return response.data;
     } catch (error) {
-      console.error("Failed to fetch latest latest:", error);
+      console.error("Failed to fetch latest invoices:", error);
       throw error;
     }
   },

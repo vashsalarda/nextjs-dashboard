@@ -6,6 +6,11 @@ import { InvoicesTableSkeleton } from "@/app/(ui)/skeletons";
 import { Suspense } from "react";
 import { fetchTotalInvoices } from '@/app/lib/data';
 import { CreateInvoice } from "./buttons";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Invoices",
+};
 
 export default async function Page(props: {
   searchParams?: Promise<{
@@ -18,7 +23,7 @@ export default async function Page(props: {
   const query = searchParams?.query || "";
   const page = Number(searchParams?.page) || 1;
   const pageSize = Number(searchParams?.page_size) || 10;
-  const totalInvoices = await fetchTotalInvoices(query);
+  const totalInvoices = await fetchTotalInvoices(query) ?? 0;
   const totalPages = totalInvoices >= pageSize ? Math.ceil(totalInvoices/pageSize) : 1
   
   return (

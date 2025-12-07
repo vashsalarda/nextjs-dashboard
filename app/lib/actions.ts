@@ -9,23 +9,52 @@ import { Customer } from "./definitions";
 
 const FormSchema = z.object({
   id: z.string(),
-  customerId: z.string(),
-  amount: z.coerce.number(),
-  status: z.enum(["pending", "paid"]),
+  customerId: z.string({
+    invalid_type_error: 'Please select a customer.',
+  }),
+  amount: z.coerce
+    .number()
+    .gt(0, { message: 'Please enter an amount greater than $0.' }),
+  status: z.enum(['pending', 'paid'], {
+    invalid_type_error: 'Please select an invoice status.',
+  }),
   date: z.string(),
 });
 
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
 const UpateInvoice = FormSchema.omit({ id: true, date: true });
 
-export async function createInvoice(formData: FormData) {
-  const { customerId, amount, status } = CreateInvoice.parse({
+export type State = {
+  errors?: {
+    customerId?: string[];
+    amount?: string[];
+    status?: string[];
+  };
+  message?: string | null;
+};
+ 
+export async function createInvoice(prevState: State, formData: FormData) {
+  console.log({prevState});
+  
+  const validatedFields = CreateInvoice.safeParse({
     customerId: formData.get("customerId") ?? "",
     amount: formData.get("amount") ?? 0,
     status: formData.get("status") ?? "",
   });
   const date = new Date().toISOString().split("T")[0];
+  console.log({validatedFields});
 
+  if (!validatedFields.success) {
+    console.log({errors: validatedFields.error.flatten().fieldErrors});
+    
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Invoice.',
+    };
+  }
+ 
+  const { customerId, amount, status } = validatedFields.data;
+ 
   const { ObjectId } = await import("mongodb");
   if (!ObjectId.isValid(customerId)) {
     throw new Error("Invalid customerId");
@@ -33,6 +62,8 @@ export async function createInvoice(formData: FormData) {
   const customerIdObj = new ObjectId(customerId);
 
   const database = await db();
+  console.log({database});
+  
   const customer = await database
     .collection("customers")
     .findOne({ _id: customerIdObj });
@@ -42,7 +73,7 @@ export async function createInvoice(formData: FormData) {
     customerData = {
       id: customer.id,
       name: customer.name,
-      email: customer.name,
+      email: customer.email,
       imageUrl: customer.imageUrl
     };
   }
@@ -100,7 +131,7 @@ export async function updateInvoice(id: string, formData: FormData) {
     customerData = {
       id: customer.id,
       name: customer.name,
-      email: customer.name,
+      email: customer.email,
       imageUrl: customer.imageUrl
     };
   }
