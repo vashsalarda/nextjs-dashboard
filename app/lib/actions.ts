@@ -42,11 +42,8 @@ export async function createInvoice(prevState: State, formData: FormData) {
     status: formData.get("status") ?? "",
   });
   const date = new Date().toISOString().split("T")[0];
-  console.log({validatedFields});
 
-  if (!validatedFields.success) {
-    console.log({errors: validatedFields.error.flatten().fieldErrors});
-    
+  if (!validatedFields.success) {    
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to Create Invoice.',
@@ -62,7 +59,6 @@ export async function createInvoice(prevState: State, formData: FormData) {
   const customerIdObj = new ObjectId(customerId);
 
   const database = await db();
-  console.log({database});
   
   const customer = await database
     .collection("customers")
@@ -71,21 +67,12 @@ export async function createInvoice(prevState: State, formData: FormData) {
   let customerData = {} as Customer
   if (customer != null) {
     customerData = {
-      id: customer.id,
+      _id: new ObjectId(customer._id),
       name: customer.name,
       email: customer.email,
       imageUrl: customer.imageUrl
     };
   }
-
-  console.log({
-    customerId,
-    customerData,
-    amount,
-    status,
-    date,
-    createdAt: new Date(),
-  });
 
   const resp = await database.collection("invoices").insertOne({
     customerId: customerIdObj,
@@ -96,8 +83,6 @@ export async function createInvoice(prevState: State, formData: FormData) {
     createdAt: new Date(),
     updatedAt: new Date(),
   });
-
-  console.log({ resp });
 
   if (!resp.insertedId) {
     throw new Error("Failed to Create Invoice");
@@ -129,7 +114,7 @@ export async function updateInvoice(id: string, formData: FormData) {
   let customerData = {} as Customer
   if (customer != null) {
     customerData = {
-      id: customer.id,
+      _id: customer._id,
       name: customer.name,
       email: customer.email,
       imageUrl: customer.imageUrl

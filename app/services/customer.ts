@@ -1,8 +1,10 @@
 import api from "@/lib/axios";
 import { Customer, CustomerPage } from "@/app/types";
+import { CustomersTableType } from "../lib/definitions";
 
 export const customerService = {
   getCustomers: async (): Promise<CustomerPage> => {
+
     try {
       const response = await api.get<CustomerPage>('/customers');
       return response.data;
@@ -15,6 +17,21 @@ export const customerService = {
   getTotalCustomers: async (): Promise<number> => {
     try {
       const response = await api.get<number>('/customers-total');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch total customers:', error);
+      throw error;
+    }
+  },
+
+  getInvoicesCustomers: async (query: string): Promise<CustomersTableType[]> => {
+    const params = new URLSearchParams();
+    if (query) params.append("keyword", query);
+
+    try {
+      const url = `/invoices-customers${params.toString() ? `?${params.toString()}` : ""}`;
+      console.log("Fetching invoice data...");
+      const response = await api.get<CustomersTableType[]>(url);
       return response.data;
     } catch (error) {
       console.error('Failed to fetch total customers:', error);
@@ -57,6 +74,25 @@ export const customerService = {
       await api.delete(`/customers/${id}`);
     } catch (error) {
       console.error(`Failed to delete customer ${id}:`, error);
+      throw error;
+    }
+  },
+
+  getCustomersByQuery: async (
+    query: string,
+    pageNumber: number,
+    pageSize: number,
+  ): Promise<CustomerPage> => {
+    const params = new URLSearchParams();
+    if (query) params.append("keyword", query);
+    if (pageNumber) params.append("page", pageNumber.toString());
+    if (pageSize) params.append("size", pageSize.toString());
+    
+    try {
+      const response = await api.get<CustomerPage>('/customers');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch customers:', error);
       throw error;
     }
   },

@@ -21,7 +21,7 @@ export default async function InvoicesTable({
 }) {
   const invoicesRes = await fetchInvoices(query, page, pageSize);
   let invoices = invoicesRes && invoicesRes.data ? invoicesRes.data : [];
-  console.log({invoices});
+  // console.log({invoices});
   
   if (!invoices || invoices.length === 0) {
     return (

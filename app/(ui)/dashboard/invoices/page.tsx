@@ -4,7 +4,7 @@ import Table from "@/app/(ui)/dashboard/invoices/table";
 import { lusitana } from "@/app/(ui)/fonts";
 import { InvoicesTableSkeleton } from "@/app/(ui)/skeletons";
 import { Suspense } from "react";
-import { fetchTotalInvoices } from '@/app/lib/data';
+import { fetchTotalInvoices } from "@/app/lib/data";
 import { CreateInvoice } from "./buttons";
 import { Metadata } from "next";
 
@@ -23,9 +23,10 @@ export default async function Page(props: {
   const query = searchParams?.query || "";
   const page = Number(searchParams?.page) || 1;
   const pageSize = Number(searchParams?.page_size) || 10;
-  const totalInvoices = await fetchTotalInvoices(query) ?? 0;
-  const totalPages = totalInvoices >= pageSize ? Math.ceil(totalInvoices/pageSize) : 1
-  
+  const totalInvoices = (await fetchTotalInvoices(query)) ?? 0;
+  const totalPages =
+    totalInvoices >= pageSize ? Math.ceil(totalInvoices / pageSize) : 1;
+
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
@@ -39,7 +40,7 @@ export default async function Page(props: {
         <Table query={query} page={page} pageSize={pageSize} />
       </Suspense>
       <div className="mt-5 flex w-full justify-center">
-        <Pagination totalPages={totalPages} currentPage={page}/>
+        <Pagination totalPages={totalPages} currentPage={page} />
       </div>
     </div>
   );
