@@ -6,6 +6,8 @@ import { Suspense } from "react";
 import Table from "./table";
 import { CustomersTableSkeleton } from "../../skeletons";
 import Search from "../../search";
+import { fetchTotalCustomers } from "@/app/lib/data";
+import Pagination from "./pagination";
 
 export const metadata: Metadata = {
   title: "Customers",
@@ -22,8 +24,8 @@ export default async function Page(props: {
   const query = searchParams?.query || "";
   const page = Number(searchParams?.page) || 1;
   const pageSize = Number(searchParams?.page_size) || 10;
-  // const totalInvoices = await fetchTotalInvoices(query) ?? 0;
-  // const totalPages = totalInvoices >= pageSize ? Math.ceil(totalInvoices/pageSize) : 1
+  const totalCustomers = await fetchTotalCustomers(query) ?? 0;
+  const totalPages = totalCustomers >= pageSize ? Math.ceil(totalCustomers/pageSize) : 1
 
   return (
     <div className="w-full">
@@ -34,12 +36,12 @@ export default async function Page(props: {
         <Search placeholder="Search customers..." />
         {/* <CreateInvoice /> */}
       </div>
-      <Suspense key={query} fallback={<CustomersTableSkeleton />}>
-        <Table query={query} />
+      <Suspense key={query + page} fallback={<CustomersTableSkeleton />}>
+        <Table query={query} page={page} pageSize={pageSize} />
       </Suspense>
-      {/* <div className="mt-5 flex w-full justify-center">
+      <div className="mt-5 flex w-full justify-center">
         <Pagination totalPages={totalPages} currentPage={page} />
-      </div> */}
+      </div>
     </div>
   );
 }

@@ -13,6 +13,24 @@ export interface CustomerPage {
   data: Customer[];
 };
 
+export interface CustomerPageWithTotal {
+  page_size: string;
+  page_number: string;
+  total_rows: number;
+  total_pages: string;
+  data: CustomerWithTotal[];
+};
+
+export type CustomerWithTotal = {
+  id: string;
+  name: string;
+  email: string;
+  imageUrl: string;
+  totalInvoices: number;
+  totalPending: number;
+  totalPaid: number;
+};
+
 export interface Invoice {
   id: string;
   customerId: string;

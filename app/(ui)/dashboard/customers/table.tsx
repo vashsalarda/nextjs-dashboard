@@ -1,12 +1,18 @@
 import Image from "next/image";
-import { fetchCustomersInvoices } from "@/app/lib/data";
+import { fetchCustomersWithTotals } from "@/app/lib/data";
 import { log } from "console";
 
-export default async function CustomersTable({query} : {
+export default async function CustomersTable({
+  query,
+  page,
+  pageSize,
+}: {
   query: string;
+  page: number;
+  pageSize: number;
 }) {
-  
-  const customers = await fetchCustomersInvoices(query);
+  const customersRes = await fetchCustomersWithTotals(query, page, pageSize);
+  let customers = customersRes && customersRes.data ? customersRes.data : [];
   // console.log({customers});
 
   return (
