@@ -8,6 +8,7 @@ import { CustomersTableSkeleton } from "../../skeletons";
 import Search from "../../search";
 import { fetchTotalCustomers } from "@/app/lib/data";
 import Pagination from "./pagination";
+import { CreateCustomer } from "../customers/buttons";
 
 export const metadata: Metadata = {
   title: "Customers",
@@ -34,7 +35,7 @@ export default async function Page(props: {
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search placeholder="Search customers..." />
-        {/* <CreateInvoice /> */}
+        <CreateCustomer />
       </div>
       <Suspense key={query + page} fallback={<CustomersTableSkeleton />}>
         <Table query={query} page={page} pageSize={pageSize} />
